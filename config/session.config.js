@@ -24,6 +24,15 @@ module.exports.loggedUser = (req, res, next) => {
 
   if (userId) {
     User.findById(userId)
+      // .populate('books')
+      .populate(
+        {
+          path: 'books',
+          populate: {
+            path: 'user'
+          }
+        }
+      )
       .then(user => {
         if (user) {
           req.currentUser = user

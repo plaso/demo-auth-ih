@@ -20,9 +20,16 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Password is required'],
       minlength: [8, 'Your password must have at least 8 characters']
-    }
+    },
   }
 )
+
+userSchema.virtual('books', {
+  ref: 'Book',
+  foreignField: 'user',
+  localField: '_id',
+  justOne: false
+})
 
 userSchema.pre('save', function(next) {
   const rawPassword = this.password;

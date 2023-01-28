@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const authController = require('../controllers/auth.controller');
 const userController = require('../controllers/user.controller');
+const booksController = require('../controllers/book.controller');
 const authMiddleware = require('../middlewares/auth.middleware');
 
 router.get('/', (req, res, next) => res.send('hola'))
@@ -20,5 +21,9 @@ router.get('/logout', authController.logout)
 
 // User
 router.get('/profile', authMiddleware.isAuthenticated, userController.profile);
+
+// Book
+router.get('/books/create', authMiddleware.isAuthenticated, booksController.create)
+router.post('/books', authMiddleware.isAuthenticated, booksController.doCreate)
 
 module.exports = router;
