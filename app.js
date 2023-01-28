@@ -1,6 +1,7 @@
 const express = require('express');
 const logger = require('morgan');
 const createError = require('http-errors');
+const { sessionConfig, loggedUser } = require('./config/session.config')
 
 const router = require('./config/routes.config');
 require('./config/db.config');
@@ -17,6 +18,10 @@ app.set('view engine', 'hbs');
 
 /** Configure static files */
 app.use(express.static("public"));
+
+// Session middleware
+app.use(sessionConfig);
+app.use(loggedUser);
 
 /** Router **/
 app.use('/', router)

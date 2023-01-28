@@ -37,3 +37,52 @@ module.exports.doSignup = (req, res, next) => {
       }
     })
 }
+
+module.exports.login = (req, res, next) => {
+  res.render('auth/login')
+}
+
+module.exports.doLogin = (req, res, next) => {
+  const { email, password } = req.body;
+
+  const renderWithErrors = () => {
+    res.render(
+      'auth/login',
+      {
+        user: { email },
+        errors: { email: 'Email or password are incorrect' }
+      }
+    )
+  }
+
+  if (!email || !password) {
+    renderWithErrors()
+  }
+
+  // Comprobar si hay un usuario con este email
+  User.findOne({ email }) // dklashdlkjashDFJKSAHFIJSDAHKL - 12345678
+    .then(user => {
+      if (!user) {
+        renderWithErrors()
+      } else {
+        return user.checkPassword(password)
+          .then(match => {
+            if (!match) {
+              renderWithErrors()
+            } else {
+              req.session.userId = user.id
+              res.redirect('/profile')
+            }
+          })
+        // Comprobamos que la contraseña sea correcta
+      }
+    })
+    .catch(err => {
+      next(err)
+    })
+}
+
+module.exports.logout = (req, res, next) => {
+  req.session.destroy()
+  res.redirect('/login')
+}
