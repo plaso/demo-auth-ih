@@ -21,7 +21,7 @@ app.use(express.static("public"));
 
 // Session middleware
 app.use(sessionConfig);
-app.use(loggedUser);
+app.use(loggedUser); // req.currentUser = undefined || user en session
 
 /** Router **/
 app.use('/', router)
@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 
 app.use((error, req, res, next) => {
   console.log(error)
-  let status =  error.status || 500;
+  let status = error.status || 500;
 
   res.status(status).render('error', {
     message: error.message,

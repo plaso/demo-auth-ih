@@ -20,7 +20,7 @@ module.exports.doSignup = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then(user => {
       if (!user) {
-        // lo creo
+        // lo intento crear
         return User.create(req.body)
           .then(user => {
             res.redirect('/')
@@ -49,7 +49,7 @@ module.exports.doLogin = (req, res, next) => {
     res.render(
       'auth/login',
       {
-        user: { email },
+        user: { email: req.body.email },
         errors: { email: 'Email or password are incorrect' }
       }
     )
@@ -68,7 +68,7 @@ module.exports.doLogin = (req, res, next) => {
         return user.checkPassword(password)
           .then(match => {
             if (!match) {
-              renderWithErrors()
+              renderWithErrors() // la password esta mal
             } else {
               req.session.userId = user.id
               res.redirect('/profile')

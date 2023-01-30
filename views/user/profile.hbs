@@ -3,7 +3,6 @@
 <h2>Welcome {{currentUser.name}}</h2>
 <p>Your email is {{currentUser.email}}</p>
 
-
 <h3>Your books list</h3>
 
 <div class="row row-cols-1 row-cols-md-2 g-4">
@@ -15,7 +14,17 @@
           <p class="card-text">{{book.description}}</p>
           <p class="card-text">Author: {{book.user.name}}</p>
           {{!-- <p class="card-text">Author: {{../currentUser.name}}</p> --}}
-          {{!-- book.user.name requiere de populate  en el session config que es donde tengo el find --}}
+          {{! book.user.name requiere de populate  en el session config que es donde tengo el find }}
+        </div>
+        <div class="p-3">
+          <button
+            data-id="{{book.id}}"
+            data-caca="algo"
+            class="delete-book-btn btn btn-danger btn-small"
+          >
+            DELETE
+
+          </button>
         </div>
       </div>
     </div>
@@ -23,7 +32,9 @@
 </div>
 
 <h3>Books from other people</h3>
-
+<button id="profile-btn-axios" class="btn btn-primary">
+  petición de axios
+</button>
 <div class="row row-cols-1 row-cols-md-2 g-4">
   {{#each books as |book|}}
     <div class="col">

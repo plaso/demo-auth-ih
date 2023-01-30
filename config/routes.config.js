@@ -23,6 +23,7 @@ router.get('/logout', authController.logout)
 router.get('/profile', authMiddleware.isAuthenticated, userController.profile);
 
 // Book
+router.delete('/books/:id', booksController.doDelete)
 router.get('/books/create', authMiddleware.isAuthenticated, booksController.create)
 router.post('/books', authMiddleware.isAuthenticated, booksController.doCreate)
 

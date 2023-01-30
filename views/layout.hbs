@@ -17,6 +17,9 @@
       referrerpolicy="no-referrer"
     />
     <link href="/css/main.css" rel="stylesheet" />
+  {{!-- lo dejo al final para que se cargue todo lo demás primero --}}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/main.js"></script>
     <title>Document</title>
   </head>
   <body>
@@ -25,5 +28,7 @@
     <div class="container">
       {{{body}}}
     </div>
+
+
   </body>
 </html>

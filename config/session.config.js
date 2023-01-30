@@ -35,7 +35,7 @@ module.exports.loggedUser = (req, res, next) => {
       )
       .then(user => {
         if (user) {
-          req.currentUser = user
+          req.currentUser = user // esta linea es para que el usuario este disponible en todas las rutas/controladores
           res.locals.currentUser = user // res.locals es el objeto donde se manda informacion a todas las vistas (hbs)
           next()
         } else {
