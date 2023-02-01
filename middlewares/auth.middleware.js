@@ -1,6 +1,6 @@
 module.exports.isAuthenticated = (req, res, next) => {
   // para saber si esta autenticado
-  if (req.currentUser) {
+  if (req.user) {
     next()
   } else {
     res.redirect('/login')
@@ -9,7 +9,7 @@ module.exports.isAuthenticated = (req, res, next) => {
 
 module.exports.isNotAuthenticated = (req, res, next) => {
   // para saber si esta autenticado
-  if (!req.currentUser) {
+  if (!req.user) {
     next()
   } else {
     res.redirect('/profile')

@@ -21,6 +21,9 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Password is required'],
       minlength: [8, 'Your password must have at least 8 characters']
     },
+    googleID: {
+      type: String
+    },
   }
 )
 
@@ -31,7 +34,7 @@ userSchema.virtual('books', {
   justOne: false
 })
 
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
   const rawPassword = this.password;
   if (this.isModified('password')) {
     bcrypt.hash(rawPassword, SALT_ROUNDS)
@@ -45,7 +48,7 @@ userSchema.pre('save', function(next) {
   }
 });
 
-userSchema.methods.checkPassword = function(passwordToCompare) {
+userSchema.methods.checkPassword = function (passwordToCompare) {
   return bcrypt.compare(passwordToCompare, this.password);
 }
 
