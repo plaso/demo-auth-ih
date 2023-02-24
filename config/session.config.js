@@ -19,32 +19,3 @@ module.exports.sessionConfig = expressSession({
   })
 })
 
-module.exports.loggedUser = (req, res, next) => {
-  const userId = req.session.userId;
-
-  if (userId) {
-    User.findById(userId)
-      // .populate('books')
-      .populate(
-        {
-          path: 'books',
-          populate: {
-            path: 'user'
-          }
-        }
-      )
-      .then(user => {
-        if (user) {
-          req.currentUser = user
-          res.locals.currentUser = user // res.locals es el objeto donde se manda informacion a todas las vistas (hbs)
-          next()
-        } else {
-          next()
-        }
-      })
-      .catch(err => next(err));
-  } else {
-    next()
-  }
-}
-

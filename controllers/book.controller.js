@@ -34,3 +34,11 @@ module.exports.doCreate = (req, res, next) => {
       }
     })
 }
+
+module.exports.doDelete = (req, res, next) => {
+  Book.findByIdAndDelete(req.params.id)
+    .then(book => {
+      res.send('book deleted')
+    })
+    .catch(next)
+}

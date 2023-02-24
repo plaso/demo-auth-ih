@@ -1,6 +1,8 @@
 const createError = require('http-errors');
+const passport = require('passport');
 const { default: mongoose } = require('mongoose');
 const User = require('../models/User.model');
+
 
 module.exports.signup = (req, res, next) => {
   res.render('auth/signup');
@@ -20,7 +22,7 @@ module.exports.doSignup = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then(user => {
       if (!user) {
-        // lo creo
+        // lo intento crear
         return User.create(req.body)
           .then(user => {
             res.redirect('/')
@@ -42,44 +44,39 @@ module.exports.login = (req, res, next) => {
   res.render('auth/login')
 }
 
-module.exports.doLogin = (req, res, next) => {
-  const { email, password } = req.body;
+const doLoginWithStrategy = (req, res, next, strategy = 'local-auth') => {
+  if (strategy === "local-auth") {
+    const { email, password } = req.body;
 
-  const renderWithErrors = () => {
-    res.render(
-      'auth/login',
-      {
-        user: { email },
-        errors: { email: 'Email or password are incorrect' }
-      }
-    )
+    if (!email || !password) {
+      res.status(404).render('auth/login', { errorMessage: 'Email or password are incorrect' })
+    }
   }
 
-  if (!email || !password) {
-    renderWithErrors()
-  }
-
-  // Comprobar si hay un usuario con este email
-  User.findOne({ email }) // dklashdlkjashDFJKSAHFIJSDAHKL - 12345678
-    .then(user => {
-      if (!user) {
-        renderWithErrors()
-      } else {
-        return user.checkPassword(password)
-          .then(match => {
-            if (!match) {
-              renderWithErrors()
-            } else {
-              req.session.userId = user.id
-              res.redirect('/profile')
-            }
-          })
-        // Comprobamos que la contraseña sea correcta
-      }
-    })
-    .catch(err => {
+  passport.authenticate(strategy, (err, user, validations) => {
+    if (err) {
       next(err)
-    })
+    } else if (!user) {
+      console.log({ errorMessage: validations.error })
+      res.status(404).render('auth/login', { user: { email: email }, errorMessage: validations.error })
+    } else {
+      req.login(user, (loginError) => {
+        if (loginError) {
+          next(loginError)
+        } else {
+          res.redirect('/profile')
+        }
+      })
+    }
+  })(req, res, next)
+}
+
+module.exports.doLogin = (req, res, next) => {
+  doLoginWithStrategy(req, res, next)
+}
+
+module.exports.doLoginGoogle = (req, res, next) => {
+  doLoginWithStrategy(req, res, next, 'google-auth')
 }
 
 module.exports.logout = (req, res, next) => {
